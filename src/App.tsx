@@ -2,6 +2,7 @@ import React from 'react';
 // import logo from './logo.svg';
 import stars from './stars.png';
 import './App.css';
+import vid from './videos/ryan-pitts.mp4';
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,9 @@ const App: React.FC = () => {
         <p>
           Version 0.1.10
         </p>
+        <video controls>
+          <source src={vid}/>
+        </video>
       </header>
     </div>
   );
