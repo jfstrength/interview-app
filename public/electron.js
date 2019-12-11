@@ -11,10 +11,17 @@ function createWindow() {
     mainWindow.webContents.openDevTools()
     mainWindow.loadURL(
     isDev
-    ? "http://localhost:3000"
-    : `file://${join(__dirname, "../build/index.html")}`
+    ? "http://localhost:3000/main"
+    : `file://${path.join(__dirname, "../build/index.html/main")}`
     );
     mainWindow.on("closed", () => (mainWindow = null));
+
+    secondWindow = new BrowserWindow({ width: 900, height: 680 });
+    secondWindow.loadURL(
+        isDev
+        ? "http://localhost:3000/vid"
+        : `file://${path.join(__dirname, "../build/index.html/vid")}`
+        );
 }
 
 app.on("ready", createWindow)

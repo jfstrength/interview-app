@@ -1,26 +1,35 @@
 import React from 'react';
-// import logo from './logo.svg';
-import stars from './stars.png';
 import './App.css';
-import vid from './videos/ryan-pitts.mp4';
+import Vid from './components/Vid';
+import Main from './components/Main';
+import video_rp from './videos/ryan-pitts.mp4';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+  }
+  from "react-router-dom";
+
+{/* <video controls>
+<source src={video_rp}/>
+</video> */}
 
 const App: React.FC = () => {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={stars} className="App-logo" alt="logo" />
-        <p>
-          Interview Database Entry
-        </p>
-        <p>
-          Version 0.1.10
-        </p>
-        <video controls>
-          <source src={vid}/>
-        </video>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/main">
+          <Main/>
+        </Route>
+      </Switch>
+        <Route path="/vid">
+          <Vid></Vid>
+        </Route>
+    </Router>
   );
 }
+
 
 export default App;
