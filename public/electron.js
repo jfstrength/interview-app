@@ -22,6 +22,7 @@ function createWindow() {
         ? "http://localhost:3000/vid"
         : `file://${path.join(__dirname, "../build/index.html/vid")}`
         );
+    secondWindow.on("closed", () => (secondWindow = null));
 }
 
 app.on("ready", createWindow)

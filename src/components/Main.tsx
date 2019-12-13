@@ -1,14 +1,21 @@
-import React from "react"
+import React, {useState} from "react"
 import stars from '../stars.png';
 
+interface Custom {
 
-function handleClick() {
+}
+
+const Main: React.FC<Custom> = (props) => {
+
+  function handleClick() {
     console.log("CLICKED");
+    setCount(count+1);
   }
 
-const Main: React.FC = () => {
-    return (
-  <div className="App">
+  const [count, setCount] = useState(0);
+
+  return (
+    <div className="App">
         <header className="App-header">
           <img src={stars} className="App-logo" alt="logo" />
           <p>
@@ -35,6 +42,7 @@ const Main: React.FC = () => {
             </tr>
             </tbody>
           </table>
+          <p> You have clicked the button {count} times!</p>
         </header>
       </div>
     )

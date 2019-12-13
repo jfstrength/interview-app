@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import Vid from './components/Vid';
 import Main from './components/Main';
@@ -15,21 +15,22 @@ import {
 <source src={video_rp}/>
 </video> */}
 
-const App: React.FC = () => {
+const App: React.FC = (props) => {
+
+var source: boolean = false;
 
   return (
     <Router>
       <Switch>
-        <Route path="/main">
-          <Main/>
-        </Route>
+        <Route path="/main"
+        render = {(props) => <Main {...props}/>} /> 
+        <Route path="/vid" 
+        render = {(props) => <Vid {...props} 
+        name={"Video set not to load."}
+        applyVid={source} />} />
       </Switch>
-        <Route path="/vid">
-          <Vid></Vid>
-        </Route>
     </Router>
   );
 }
-
 
 export default App;

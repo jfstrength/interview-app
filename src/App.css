@@ -25,3 +25,8 @@ table, th, td {
   border: 1px solid white;
   border-collapse: collapse;
 }
+
+.box {
+  display: flex;
+  justify-content: center;
+}
