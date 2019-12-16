@@ -2,17 +2,16 @@ import React, {useState} from "react"
 import stars from '../stars.png';
 
 interface Custom {
-
+handler: Function;
 }
 
 const Main: React.FC<Custom> = (props) => {
 
-  function handleClick() {
-    console.log("CLICKED");
+  const [count, setCount] = useState(0);
+
+  function counter() {
     setCount(count+1);
   }
-
-  const [count, setCount] = useState(0);
 
   return (
     <div className="App">
@@ -38,7 +37,7 @@ const Main: React.FC<Custom> = (props) => {
               <td>Ryan Pitts</td>
               <td></td>
               <td></td>
-              <td><button onClick={handleClick}>Click Here</button></td>
+              <td><button onClick={() => props.handler()}>Click Here</button></td>
             </tr>
             </tbody>
           </table>

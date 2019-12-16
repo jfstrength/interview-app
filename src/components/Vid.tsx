@@ -1,22 +1,30 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import video_rp from '../videos/ryan-pitts.mp4';
+import { parentPort } from "worker_threads";
+import { prependOnceListener } from "cluster";
 
 
 interface customProps {
-    name: string;
-    applyVid: boolean;
+    vidStatus: boolean;
 }
 
 const Vid: React.FC<customProps> = (props) => {
 
     let conditionalVideo;
 
-    if(props.applyVid) {
+    const[check, setCheck] = useState(props.vidStatus)
+
+    useEffect(() => {
+        console.log("Toggled");
+        setCheck(props.vidStatus);
+    },[props.vidStatus])
+
+    if(check) {
         conditionalVideo =<video controls>
             <source src={video_rp}/>
             </video>;
     } else {
-        conditionalVideo = <p>{props.name}</p>
+        conditionalVideo = <p>Video set not to load.</p>
     }
 
     return(

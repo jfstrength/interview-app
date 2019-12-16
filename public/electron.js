@@ -17,6 +17,7 @@ function createWindow() {
     mainWindow.on("closed", () => (mainWindow = null));
 
     secondWindow = new BrowserWindow({ width: 900, height: 680 });
+    secondWindow.webContents.openDevTools();
     secondWindow.loadURL(
         isDev
         ? "http://localhost:3000/vid"
