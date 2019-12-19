@@ -12,13 +12,8 @@ const Vid: React.FC<customProps> = (props) => {
 
     let conditionalVideo;
 
-    const[check, setCheck] = useState(props.vidStatus)
-
-    useEffect(() => {
-        console.log("Toggled");
-        setCheck(props.vidStatus);
-    },[props.vidStatus])
-
+    const[check, setCheck] = useState(props.vidStatus);
+    
     if(check) {
         conditionalVideo =<video controls>
             <source src={video_rp}/>
