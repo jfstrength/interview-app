@@ -1,45 +1,33 @@
-import React, {useState, useRef, useImperativeHandle} from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Vid from './components/Vid';
 import Main from './components/Main';
-import video_rp from './videos/ryan-pitts.mp4';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-  }
-  from "react-router-dom";
-
-{/* <video controls>
-<source src={video_rp}/>
-</video> */}
-
-
+import {useRoutes} from 'hookrouter';
+//import {mainWindow, secondWindow} from './electron'
+//import fs from 'fs'
+//const electron = window.require("electron")
+//const BrowserWindow = electron.remote.BrowserWindow;
 
 const App: React.FC = (props) => {
 
-  const[source, setSource] = useState(false);
+  const routes = {
+    '/': () => <Main handler={() => togglePlay}/>,
+    '/vid': () => <Vid/>
+  };
 
-  function handleSource() {
-    setSource(!source);
-    console.log("Source is now:" + source);
+  const [play, setPlay] = useState(true);
+ 
+  function togglePlay() {
+    // (mainWindow as any).webContents.send('playit','GO GO GO');
+    console.log("CLICKED");
   }
 
+  const routeResult = useRoutes(routes)
+
   return (
-    <Router>
-      <Switch>
-        <Route path="/main"
-        render = {(props) => <Main {...props}
-        handler = {handleSource}
-        />} /> 
-        <Route path="/vid" 
-        render = {(props) => <Vid {...props}
-        vidStatus = {source}
-        />} />
-      </Switch>
-    </Router>
+      routeResult
   );
+
 }
 
 export default App;

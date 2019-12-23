@@ -1,26 +1,21 @@
 import React, { useState, useEffect } from "react"
 import video_rp from '../videos/ryan-pitts.mp4';
-import { parentPort } from "worker_threads";
-import { prependOnceListener } from "cluster";
+//const electron = window.require("electron")
 
 
 interface customProps {
-    vidStatus: boolean;
 }
 
 const Vid: React.FC<customProps> = (props) => {
 
-    let conditionalVideo;
-
-    const[check, setCheck] = useState(props.vidStatus);
-    
-    if(check) {
-        conditionalVideo =<video controls>
+    const conditionalVideo = 
+            <video controls>
             <source src={video_rp}/>
-            </video>;
-    } else {
-        conditionalVideo = <p>Video set not to load.</p>
-    }
+            </video>
+
+    // electron.ipcRenderer.on('playit', (event: any, message: any) => {
+    //     console.log(message)
+    // })
 
     return(
         <div className="box">
