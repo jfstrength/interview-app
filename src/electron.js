@@ -1,4 +1,4 @@
-const electron =require("electron");
+const electron = require("electron");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require("path");
@@ -11,7 +11,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({ width: 900, height: 680, webPreferences: {
         nodeIntegration: true
     }});
-    mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools();
     mainWindow.loadURL(
     isDev
     ? "http://localhost:3000/"
@@ -45,4 +45,10 @@ createWindow();
 }
 });
 
-module.exports = {mainWindow, secondWindow};
+ipc = electron.ipcMain;
+
+ipc.on('testing', (event, arg) => {
+    console.log('here',arg);
+    mainWindow.webContents.send('reply','Did it!');
+    secondWindow.webContents.send('reply','Did it!');
+});

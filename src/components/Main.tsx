@@ -1,11 +1,23 @@
 import React, {useState} from "react"
 import stars from '../stars.png';
+const electron = window.require("electron")
 
-interface Custom {
-  handler: Function;
+
+interface customProps {
 }
 
-const Main: React.FC<Custom> = (props) => {
+const Main: React.FC<customProps> = (props) => {
+
+  const ipcRenderer = electron.ipcRenderer;
+
+  ipcRenderer.on('reply',(event,args) => {
+    console.log('retrieved '+args);
+  })
+
+  function togglePlay() {
+    ipcRenderer.send('testing', 'ping');
+    console.log("CLICKED");
+  }
 
   return (
     <div className="App">
@@ -35,7 +47,7 @@ const Main: React.FC<Custom> = (props) => {
             </tr>
             </tbody>
           </table>
-          <button onClick={props.handler()}>Click to play</button>
+          <button id="target" onClick={togglePlay}>Click to play</button>
         </header>
       </div>
     )
