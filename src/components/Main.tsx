@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React from "react"
 import stars from '../stars.png';
 const electron = window.require("electron")
 
@@ -10,13 +10,8 @@ const Main: React.FC<customProps> = (props) => {
 
   const ipcRenderer = electron.ipcRenderer;
 
-  ipcRenderer.on('reply',(event,args) => {
-    console.log('retrieved '+args);
-  })
-
   function togglePlay() {
     ipcRenderer.send('testing', 'ping');
-    console.log("CLICKED");
   }
 
   return (
