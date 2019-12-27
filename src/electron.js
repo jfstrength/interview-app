@@ -48,6 +48,5 @@ createWindow();
 ipc = electron.ipcMain;
 
 ipc.on('testing', (event, arg) => {
-    mainWindow.webContents.send('reply','Did it!');
-    secondWindow.webContents.send('reply','Did it!');
+    secondWindow.webContents.send('reply',arg);
 });

@@ -10,8 +10,8 @@ const Main: React.FC<customProps> = (props) => {
 
   const ipcRenderer = electron.ipcRenderer;
 
-  function togglePlay() {
-    ipcRenderer.send('testing', 'ping');
+  function togglePlay(str: string) {
+    ipcRenderer.send('testing', str);
   }
 
   return (
@@ -42,7 +42,7 @@ const Main: React.FC<customProps> = (props) => {
             </tr>
             </tbody>
           </table>
-          <button id="target" onClick={togglePlay}>Click to play</button>
+          <button id="target" onClick={() => togglePlay('video_ss')}>Click to play</button>
         </header>
       </div>
     )
