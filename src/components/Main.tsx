@@ -2,6 +2,8 @@ import React from "react"
 import stars from '../stars.png';
 const electron = window.require("electron")
 
+// Selection window rendered by the root route
+// contains the user interface
 
 interface customProps {
 }

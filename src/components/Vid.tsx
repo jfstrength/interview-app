@@ -2,6 +2,8 @@ import React from "react";
 import vidMap from '../videos/vidMap';
 const electron = window.require("electron");
 
+// Video player element that renders in the second window
+
 interface customProps {
 }
 
