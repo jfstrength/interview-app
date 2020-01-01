@@ -40,11 +40,16 @@ const Main: React.FC<customProps> = (props) => {
               <td>Ryan Pitts</td>
               <td></td>
               <td></td>
-              <td><button>Click Here</button></td>
+              <td><button onClick={() => togglePlay('video_rp')}>Click Here</button></td>
+            </tr>
+            <tr>
+              <td>Sunset Video</td>
+              <td></td>
+              <td></td>
+              <td><button onClick={() => togglePlay('video_ss')}>Click Here</button></td>
             </tr>
             </tbody>
           </table>
-          <button id="target" onClick={() => togglePlay('video_ss')}>Click to play</button>
         </header>
       </div>
     )
