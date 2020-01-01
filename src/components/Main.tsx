@@ -18,40 +18,23 @@ const Main: React.FC<customProps> = (props) => {
 
   return (
     <div className="App">
-        <header className="App-header">
-          <img src={stars} className="App-logo" alt="logo" />
-          <p>
-            Interview Database Entry
-          </p>
-          <p>
-            Version 0.1.10
-          </p>
-          <table>
-            <thead>
-            <tr>
-              <th>Name</th>
-              <th>Conflict</th>
-              <th>Bio</th>
-              <th>Interview</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>  
-              <td>Ryan Pitts</td>
-              <td></td>
-              <td></td>
-              <td><button onClick={() => togglePlay('video_rp')}>Click Here</button></td>
-            </tr>
-            <tr>
-              <td>Sunset Video</td>
-              <td></td>
-              <td></td>
-              <td><button onClick={() => togglePlay('video_ss')}>Click Here</button></td>
-            </tr>
-            </tbody>
-          </table>
-        </header>
+      <header className="App-header">
+        <img src={stars} className="App-logo" alt="logo" />
+        <p>
+          Interview Database UI
+        </p>
+      </header>
+      <div className="content">
+        <div className="container">
+          <h1>Ryan Pitts</h1>
+          <button onClick={() => togglePlay('video_rp')}>Click Here</button>
+        </div>
+        <div className="container">
+          <h1>Sunset</h1>
+          <button onClick={() => togglePlay('video_ss')}>Click Here</button>
+        </div>
       </div>
+    </div>
     )
   }
 

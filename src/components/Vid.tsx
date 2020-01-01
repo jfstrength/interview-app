@@ -17,21 +17,14 @@ const Vid: React.FC<customProps> = (props) => {
     });
 
     useEffect(()=> {
-        let counter: number = 0;
         const timer = setInterval(() => {
-            counter = counter + 2;
-            if(counter === 10) {
                 if(vidRef.current) {
                     if(vidRef.current.paused) {
                         vidRef.current.play();
                     }
                 }
-            }
-        }, 2000);
+            }, 10*1000);
         return () => clearInterval(timer);
-    },[source]);
-
-    useEffect(() => {
     },[source]);
 
     return(
