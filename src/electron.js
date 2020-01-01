@@ -12,10 +12,20 @@ let secondWindow;
 
 // Creates both the player window and selection window on startup
 function createWindow() {
-    mainWindow = new BrowserWindow({ width: 900, height: 680, webPreferences: {
+
+    //TEMP for DEV alignment
+    let display = electron.screen.getPrimaryDisplay();
+    let width = display.bounds.width;
+    let height = display.bounds.height;
+
+    mainWindow = new BrowserWindow({ frame: false, width: 900, height: 680, webPreferences: {
         nodeIntegration: true
     }});
-    mainWindow.webContents.openDevTools();
+
+    //TEMP for DEV alignment
+    mainWindow.openDevTools();
+    mainWindow.setPosition(width/2 - (900/2) - 450,height/2 - (680/2));
+    
     mainWindow.loadURL(
     isDev
     ? "http://localhost:3000/"
@@ -23,10 +33,13 @@ function createWindow() {
     );
     mainWindow.on("closed", () => (mainWindow = null));
 
-    secondWindow = new BrowserWindow({ width: 900, height: 680, webPreferences: {
+    secondWindow = new BrowserWindow({frame: false, width: 900, height: 680, webPreferences: {
         nodeIntegration: true
-    } });
-    secondWindow.webContents.openDevTools();
+    }});
+
+    //TEMP for DEV alignment
+    secondWindow.setPosition(width/2 - (900/2) + 450,height/2 - (680/2));
+    
     secondWindow.loadURL(
         isDev
         ? "http://localhost:3000/vid"
@@ -59,3 +72,7 @@ ipc = electron.ipcMain;
 ipc.on('testing', (event, arg) => {
     secondWindow.webContents.send('reply',arg);
 });
+
+ipc.on('playing',(event, arg) => {
+    mainWindow.webContents.send('play',arg);
+})

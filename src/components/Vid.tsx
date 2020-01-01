@@ -11,10 +11,16 @@ const Vid: React.FC<customProps> = (props) => {
 
     const [source,setSource] = useState(vidMap.get("video_rp"));
     const vidRef = useRef<HTMLVideoElement>(null);
+    const ipcRenderer = electron.ipcRenderer;
 
-    electron.ipcRenderer.on('reply',(event,arg) => {
+
+    ipcRenderer.on('reply',(event,arg) => {
         setSource(vidMap.get(arg));
     });
+
+    function tellPlaying() {
+        ipcRenderer.send('playing',source);
+    }
 
     useEffect(()=> {
         const timer = setInterval(() => {
@@ -29,7 +35,7 @@ const Vid: React.FC<customProps> = (props) => {
 
     return(
         <div className="box">
-            <video ref={vidRef} key={source} id="vidItem">
+            <video onPlay={tellPlaying} ref={vidRef} key={source} id="vidItem">
                 <source src={source}/>
             </video>
         </div>

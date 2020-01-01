@@ -34,11 +34,12 @@ html,body,#root {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
+  flex-grow: 1;
 }
 
 .box {
   display: flex;
+  flex-grow: 1;
   justify-content: center;
 }
 

@@ -16,6 +16,10 @@ const Main: React.FC<customProps> = (props) => {
     ipcRenderer.send('testing', str);
   }
 
+  ipcRenderer.on('play',(event,arg) => {
+    console.log(arg + " is playing!");
+  })
+
   return (
     <div className="App">
       <header className="App-header">
