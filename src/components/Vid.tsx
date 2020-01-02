@@ -35,8 +35,8 @@ const Vid: React.FC<customProps> = (props) => {
 
     return(
         <div className="box">
-            <video onPlay={tellPlaying} ref={vidRef} key={source} id="vidItem">
-                <source src={source}/>
+            <video className="player" onPlay={tellPlaying} ref={vidRef} key={source}>
+                <source className="vidContent" src={source}/>
             </video>
         </div>
     )

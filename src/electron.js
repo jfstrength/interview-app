@@ -23,7 +23,6 @@ function createWindow() {
     }});
 
     //TEMP for DEV alignment
-    mainWindow.openDevTools();
     mainWindow.setPosition(width/2 - (900/2) - 450,height/2 - (680/2));
     
     mainWindow.loadURL(
@@ -75,4 +74,4 @@ ipc.on('testing', (event, arg) => {
 
 ipc.on('playing',(event, arg) => {
     mainWindow.webContents.send('play',arg);
-})
+});

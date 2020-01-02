@@ -1,5 +1,7 @@
-import React from "react"
+import React, { useState } from "react"
 import stars from '../stars.png';
+import reverseMap from '../videos/reverseMap';
+import PopUp from './PopUp';
 const electron = window.require("electron")
 
 // Selection window rendered by the root route
@@ -11,17 +13,28 @@ interface customProps {
 const Main: React.FC<customProps> = (props) => {
 
   const ipcRenderer = electron.ipcRenderer;
+  const [popUp,setPopUp] = useState(false);
+  const [vidName,setVidName] = useState("Nothing");
 
   function togglePlay(str: string) {
     ipcRenderer.send('testing', str);
+    setVidName("Your video is loading...");
+    setPopUp(true);
+  }
+
+  function closePop() {
+    setPopUp(false);
+    console.log("close");
   }
 
   ipcRenderer.on('play',(event,arg) => {
-    console.log(arg + " is playing!");
+    setVidName(reverseMap.get(arg)+" is playing!")
+    setPopUp(true);
   })
 
   return (
     <div className="App">
+      {popUp ?  <PopUp handler={closePop} vidName={vidName}/> : null}
       <header className="App-header">
         <img src={stars} className="App-logo" alt="logo" />
         <p>
@@ -42,4 +55,4 @@ const Main: React.FC<customProps> = (props) => {
     )
   }
 
-  export default Main
+  export default Main;
