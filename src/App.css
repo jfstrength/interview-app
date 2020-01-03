@@ -5,6 +5,10 @@ html,body,#root {
   padding: 0;
 }
 
+button {
+  border-radius: 5px;
+}
+
 .App {
   text-align: center;
   display: flex;
@@ -14,9 +18,14 @@ html,body,#root {
   padding: 0px;
 }
 
+img {
+  border-radius: 10px;
+}
+
 .App-logo {
   height: 40vmin;
   padding: 5px;
+  margin-top: 30px;
 }
 
 .App-header {
@@ -48,6 +57,7 @@ html,body,#root {
 .container {
   background-color: rgb(146,130,91);
   border: 1px solid white;
+  border-radius: 5px;
   padding: 5px;
   margin: 5px;
   color: white;

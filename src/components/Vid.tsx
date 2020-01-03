@@ -18,6 +18,7 @@ const Vid: React.FC<customProps> = (props) => {
         ipcRenderer.send('playing',source);
     }
 
+    // Subscribe to event listeners on mount and remove them on unmount
     useEffect(()=> {
         const timer = setInterval(() => {
                 if(vidRef.current) {

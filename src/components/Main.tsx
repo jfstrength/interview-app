@@ -45,7 +45,9 @@ const Main: React.FC<customProps> = (props) => {
     <div className="App">
       {popUp ?  <PopUp pauser={pauseIt} closer={closePop} vidName={vidName}/> : null}
       <header className="App-header">
+        <div className="image-holder">
         <img src={stars} className="App-logo" alt="logo" />
+        </div>
         <p>
           Interview Database UI
         </p>
