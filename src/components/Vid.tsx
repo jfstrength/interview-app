@@ -7,16 +7,12 @@ const electron = window.require("electron");
 interface customProps {
 }
 
+const ipcRenderer = electron.ipcRenderer;
+
 const Vid: React.FC<customProps> = (props) => {
 
     const [source,setSource] = useState(vidMap.get("video_rp"));
     const vidRef = useRef<HTMLVideoElement>(null);
-    const ipcRenderer = electron.ipcRenderer;
-
-
-    ipcRenderer.on('reply',(event,arg) => {
-        setSource(vidMap.get(arg));
-    });
 
     function tellPlaying() {
         ipcRenderer.send('playing',source);
@@ -32,6 +28,24 @@ const Vid: React.FC<customProps> = (props) => {
             }, 10*1000);
         return () => clearInterval(timer);
     },[source]);
+
+    useEffect(()=>{
+
+        ipcRenderer.on('reply',(event,arg) => {
+            setSource(vidMap.get(arg));
+        });
+
+        ipcRenderer.on('pauseIt',(event,arg)=>{
+            if(vidRef.current && !vidRef.current.paused)
+            vidRef.current.pause();
+        });
+
+        return () => {
+          ipcRenderer.removeAllListeners('reply');
+          ipcRenderer.removeAllListeners('pauseIt');
+        };
+      },[]);
+
 
     return(
         <div className="box">

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import stars from '../stars.png';
 import reverseMap from '../videos/reverseMap';
 import PopUp from './PopUp';
@@ -8,11 +8,12 @@ const electron = window.require("electron")
 // contains the user interface
 
 interface customProps {
-}
+};
+
+const ipcRenderer = electron.ipcRenderer;
 
 const Main: React.FC<customProps> = (props) => {
 
-  const ipcRenderer = electron.ipcRenderer;
   const [popUp,setPopUp] = useState(false);
   const [vidName,setVidName] = useState("Nothing");
 
@@ -20,21 +21,29 @@ const Main: React.FC<customProps> = (props) => {
     ipcRenderer.send('testing', str);
     setVidName("Your video is loading...");
     setPopUp(true);
-  }
+  };
 
   function closePop() {
     setPopUp(false);
-    console.log("close");
+  };
+
+  function pauseIt() {
+    ipcRenderer.send('pause');
   }
 
-  ipcRenderer.on('play',(event,arg) => {
-    setVidName(reverseMap.get(arg)+" is playing!")
-    setPopUp(true);
-  })
+  useEffect(()=>{
+    ipcRenderer.on('play',(event,arg) => {
+      setVidName(reverseMap.get(arg)+" is playing!")
+      setPopUp(true);
+    });
+    return () => {
+      ipcRenderer.removeAllListeners('play');
+    };
+  },[]);
 
   return (
     <div className="App">
-      {popUp ?  <PopUp handler={closePop} vidName={vidName}/> : null}
+      {popUp ?  <PopUp pauser={pauseIt} closer={closePop} vidName={vidName}/> : null}
       <header className="App-header">
         <img src={stars} className="App-logo" alt="logo" />
         <p>
@@ -53,6 +62,6 @@ const Main: React.FC<customProps> = (props) => {
       </div>
     </div>
     )
-  }
+  };
 
   export default Main;

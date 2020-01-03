@@ -82,6 +82,13 @@ html,body,#root {
   background-color: grey;
   animation-name: fadeIn;
   animation-duration: 0.5s;
+  display: flex;
+  flex-direction: column;
+}
+
+.pop > div > * {
+  padding: 5px;
+  margin: 5px;
 }
 
 @keyframes fadeIn {

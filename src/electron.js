@@ -75,3 +75,7 @@ ipc.on('testing', (event, arg) => {
 ipc.on('playing',(event, arg) => {
     mainWindow.webContents.send('play',arg);
 });
+
+ipc.on('pause',(event, arg) => {
+    secondWindow.webContents.send('pauseIt',arg);
+})

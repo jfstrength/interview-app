@@ -1,7 +1,8 @@
 import React from 'react';
 
 interface customProps {
-    handler: Function;
+    closer: Function;
+    pauser: Function;
     vidName: string;
 }
 
@@ -11,7 +12,8 @@ const PopUp : React.FC<customProps> = (props) => {
         <div className="pop">
             <div>
             <p>{props.vidName}</p>
-            <button onClick={()=>props.handler()}>Close</button>
+            <button onClick={()=>props.pauser()}>Pause</button>
+            <button onClick={()=>props.closer()}>Close</button>
             </div>
         </div>
     )
