@@ -57,7 +57,7 @@ app.quit();
 }
 });
 
-// Makes sure that the app doesn't open twice
+// Makes sure that the app doesn"t open twice
 app.on("activate", () => {
 if (mainWindow === null) {
 createWindow();
@@ -68,14 +68,16 @@ createWindow();
 ipc = electron.ipcMain;
 
 // onClick send name of the video to be selected to the player
-ipc.on('testing', (event, arg) => {
-    secondWindow.webContents.send('reply',arg);
+ipc.on("testing", (event, arg) => {
+    secondWindow.webContents.send("reply",arg);
 });
 
-ipc.on('playing',(event, arg) => {
-    mainWindow.webContents.send('play',arg);
+// on video playing notify UI screen
+ipc.on("playing",(event, arg) => {
+    mainWindow.webContents.send("play",arg);
 });
 
-ipc.on('pause',(event, arg) => {
-    secondWindow.webContents.send('pauseIt',arg);
+// onClick pause the video playing
+ipc.on("pause",(event, arg) => {
+    secondWindow.webContents.send("pauseIt",arg);
 })
