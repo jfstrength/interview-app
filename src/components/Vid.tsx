@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef} from "react";
 import vidMap from "../videos/vidMap";
 const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 // Video player element that renders in the second window
 
 interface customProps {
 }
-
-const ipcRenderer = electron.ipcRenderer;
 
 const Vid: React.FC<customProps> = (_props) => {
 
@@ -18,16 +17,20 @@ const Vid: React.FC<customProps> = (_props) => {
         ipcRenderer.send("playing",source);
     }
 
+    function tellPaused() {
+        ipcRenderer.send("paused",source);
+    }
+
     // Subscribe to event listeners on mount and remove them on unmount
     useEffect(()=> {
-        const timer = setInterval(() => {
+        const timer = setTimeout(() => {
                 if(vidRef.current) {
                     if(vidRef.current.paused) {
                         vidRef.current.play();
                     }
                 }
-            }, 10*1000);
-        return () => clearInterval(timer);
+            }, 5*1000);
+        return () => clearTimeout(timer);
     },[source]);
 
     useEffect(()=>{
@@ -37,8 +40,12 @@ const Vid: React.FC<customProps> = (_props) => {
         });
 
         ipcRenderer.on("pauseIt",(_event: any,_arg: any)=>{
-            if(vidRef.current && !vidRef.current.paused) {
-            vidRef.current.pause();
+            if(vidRef.current) {
+                if(vidRef.current.paused) {
+                    vidRef.current.play();
+                } else {
+                    vidRef.current.pause();
+                }
             }
         });
 
@@ -51,7 +58,7 @@ const Vid: React.FC<customProps> = (_props) => {
 
     return(
         <div className="box">
-            <video className="player" onPlay={tellPlaying} ref={vidRef} key={source}>
+            <video className="player" onPause={tellPaused} onPlay={tellPlaying} ref={vidRef} key={source}>
                 <source className="vidContent" src={source}/>
             </video>
         </div>

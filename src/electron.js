@@ -75,6 +75,11 @@ ipc.on("testing", (event, arg) => {
 // on video playing notify UI screen
 ipc.on("playing",(event, arg) => {
     mainWindow.webContents.send("play",arg);
+    mainWindow.webContents.send("playPop");
+});
+
+ipc.on("paused",(event, arg) => {
+    mainWindow.webContents.send("paused",arg);
 });
 
 // onClick pause the video playing

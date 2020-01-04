@@ -6,7 +6,7 @@ import video_rp from "../videos/ryan-pitts.mp4";
 
 let reverseMap = new Map();
 
-reverseMap.set(video_ss,"Sunset Video");
-reverseMap.set(video_rp,"Ryan Pitts Interview");
+reverseMap.set(video_ss,"Sunset video");
+reverseMap.set(video_rp,"Ryan Pitts interview");
 
 export default reverseMap;

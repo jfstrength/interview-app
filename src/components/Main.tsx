@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import stars from "../stars.png";
-import reverseMap from "../videos/reverseMap";
 import PopUp from "./PopUp";
 const electron = window.require("electron")
+const ipcRenderer = electron.ipcRenderer;
 
 // Selection window rendered by the root route
 // contains the user interface
@@ -10,16 +10,13 @@ const electron = window.require("electron")
 interface customProps {
 };
 
-const ipcRenderer = electron.ipcRenderer;
 
 const Main: React.FC<customProps> = (_props) => {
 
   const [popUp,setPopUp] = useState(false);
-  const [vidName,setVidName] = useState("Nothing");
 
   function togglePlay(str: string) {
     ipcRenderer.send("testing", str);
-    setVidName("Your video is loading...");
     setPopUp(true);
   };
 
@@ -29,24 +26,24 @@ const Main: React.FC<customProps> = (_props) => {
 
   function pauseIt() {
     ipcRenderer.send("pause");
-  }
+  };
 
   // Subscribe to event listeners on mount and remove them on unmount
   useEffect(()=>{
 
-    ipcRenderer.on("play",(_event: any,arg: any) => {
-      setVidName(reverseMap.get(arg)+" is playing!")
+    ipcRenderer.on("playPop",(_event: any,_arg: any) => {
       setPopUp(true);
     });
-    
-    return () => {
-      ipcRenderer.removeAllListeners("play");
-    };
+
+    return()=> {
+      ipcRenderer.removeAllListeners("playPop");
+    }
+
   },[]);
 
   return (
     <div className="App">
-      {popUp ?  <PopUp pauser={pauseIt} closer={closePop} vidName={vidName}/> : null}
+      {popUp ?  <PopUp pauser={pauseIt} closer={closePop}/> : null}
       <header className="App-header">
         <div className="image-holder">
         <img src={stars} className="App-logo" alt="logo" />
