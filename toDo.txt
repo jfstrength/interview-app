@@ -1,0 +1,16 @@
+-Css styling
+
+-Loading screen video
+
+-Standard timeout componenets
+
+-Organize and comment code
+
+-Biographical components
+
+-Add all videos
+    -Map & Reverse Map
+
+-Manage screen sizing & resolution
+
+-Restrict windows 10 to single kiosk shell

@@ -28,6 +28,16 @@ const Main: React.FC<customProps> = (_props) => {
     ipcRenderer.send("pause");
   };
 
+  // Set popUp timer
+  useEffect(()=>{
+      const timer = setTimeout(()=>{
+        if(popUp===true) {
+          setPopUp(false);
+        }
+      },10*1000);
+    return () => clearTimeout(timer);
+  },[popUp])
+
   // Subscribe to event listeners on mount and remove them on unmount
   useEffect(()=>{
 

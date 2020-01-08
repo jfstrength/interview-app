@@ -21,7 +21,7 @@ const Vid: React.FC<customProps> = (_props) => {
         ipcRenderer.send("paused",source);
     }
 
-    // Subscribe to event listeners on mount and remove them on unmount
+    // Create a timer on video startup
     useEffect(()=> {
         const timer = setTimeout(() => {
                 if(vidRef.current) {
@@ -33,6 +33,7 @@ const Vid: React.FC<customProps> = (_props) => {
         return () => clearTimeout(timer);
     },[source]);
 
+    // Subscribe to event listeners on mount and remove them on unmount
     useEffect(()=>{
 
         ipcRenderer.on("reply",(_event: any,arg: any) => {
