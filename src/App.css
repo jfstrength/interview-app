@@ -96,6 +96,16 @@ img {
   flex-direction: column;
 }
 
+.buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.buttons > * {
+  padding: 5px;
+  margin: 5px;
+}
+
 .pop > div > * {
   padding: 5px;
   margin: 5px;

@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, {useEffect, useState, useRef } from "react";
 import reverseMap from "../videos/reverseMap";
 import vidMap from "../videos/vidMap";
 const electron = window.require("electron")
@@ -13,6 +13,7 @@ const PopUp : React.FC<customProps> = (props) => {
 
     const[videoName,setVideoName]=useState("Your video is loading...");
     const[buttonText,setButtonText]=useState("Pause");
+    const[ready, setReady]=useState(false);
 
     useEffect(()=>{
         
@@ -23,8 +24,10 @@ const PopUp : React.FC<customProps> = (props) => {
         }); 
     
         ipcRenderer.on("play",(_event: any,arg: any) => {
-            if(arg !== vidMap.get("countdown"))
-              setVideoName(reverseMap.get(arg) + " is playing.")
+            if(arg !== vidMap.get("countdown")) {
+              setVideoName(reverseMap.get(arg) + " is playing.");
+              setReady(true);
+            }
             setButtonText("Pause");
           });
 
@@ -35,14 +38,20 @@ const PopUp : React.FC<customProps> = (props) => {
 
       },[]);
 
+      const buttonsRef = useRef<HTMLDivElement>(null);
+
     return(
         <div className="pop">
             <div>
-            <p>{videoName}</p>
-            <button onClick={()=>props.pauser()}>{buttonText}</button>
-            <button onClick={()=>props.closer()}>Close</button>
+              <p>{videoName}</p>
+              {ready ? 
+              <div ref={buttonsRef} className="buttons"> 
+                  <button onClick={()=>props.pauser()}>{buttonText}</button>
+                  <button onClick={()=>props.closer()}>Keep browsing</button>
+              </div>
+                : null}
+              </div>
             </div>
-        </div>
     )
 }
 
