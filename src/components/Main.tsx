@@ -34,7 +34,7 @@ const Main: React.FC<customProps> = (_props) => {
         if(popUp===true) {
           setPopUp(false);
         }
-      },10*1000);
+      },60*1000);
     return () => clearTimeout(timer);
   },[popUp])
 

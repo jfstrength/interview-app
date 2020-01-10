@@ -1,5 +1,6 @@
 import React, {useEffect, useState } from "react";
 import reverseMap from "../videos/reverseMap";
+import vidMap from "../videos/vidMap";
 const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer;
 
@@ -16,12 +17,14 @@ const PopUp : React.FC<customProps> = (props) => {
     useEffect(()=>{
         
         ipcRenderer.on("paused",(_event: any,arg: any)=>{
-            setVideoName(reverseMap.get(arg) + " is paused.");
+            if(arg !== vidMap.get("countdown"))
+              setVideoName(reverseMap.get(arg) + " is paused.");
             setButtonText("Play");
         }); 
     
         ipcRenderer.on("play",(_event: any,arg: any) => {
-            setVideoName(reverseMap.get(arg) + " is playing.")
+            if(arg !== vidMap.get("countdown"))
+              setVideoName(reverseMap.get(arg) + " is playing.")
             setButtonText("Pause");
           });
 

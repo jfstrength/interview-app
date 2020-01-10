@@ -78,6 +78,7 @@ ipc.on("playing",(event, arg) => {
     mainWindow.webContents.send("playPop");
 });
 
+// on video paused notify UI screen
 ipc.on("paused",(event, arg) => {
     mainWindow.webContents.send("paused",arg);
 });

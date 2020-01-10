@@ -10,34 +10,31 @@ interface customProps {
 
 const Vid: React.FC<customProps> = (_props) => {
 
-    const [source,setSource] = useState(vidMap.get("video_rp"));
+    const [source,setSource] = useState("");
     const vidRef = useRef<HTMLVideoElement>(null);
 
     function tellPlaying() {
         ipcRenderer.send("playing",source);
-    }
+    };
 
     function tellPaused() {
         ipcRenderer.send("paused",source);
-    }
-
-    // Create a timer on video startup
-    useEffect(()=> {
-        const timer = setTimeout(() => {
-                if(vidRef.current) {
-                    if(vidRef.current.paused) {
-                        vidRef.current.play();
-                    }
-                }
-            }, 5*1000);
-        return () => clearTimeout(timer);
-    },[source]);
+    };
 
     // Subscribe to event listeners on mount and remove them on unmount
     useEffect(()=>{
 
         ipcRenderer.on("reply",(_event: any,arg: any) => {
-            setSource(vidMap.get(arg));
+            setSource(vidMap.get("countdown"));
+            if(vidRef.current) {
+                vidRef.current.play();
+                vidRef.current.onended = () => {
+                    setSource(vidMap.get(arg));
+                    if(vidRef.current) {
+                    vidRef.current.play();
+                    }
+                }
+            }
         });
 
         ipcRenderer.on("pauseIt",(_event: any,_arg: any)=>{
