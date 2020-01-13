@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import stars from "../stars.png";
 import PopUp from "./PopUp";
+import reverseMap from "../videos/reverseMap";
 const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer;
 
@@ -10,18 +11,22 @@ const ipcRenderer = electron.ipcRenderer;
 interface customProps {
 };
 
-
 const Main: React.FC<customProps> = (_props) => {
 
   const [popUp,setPopUp] = useState(false);
+  const [current, setCurrent] = useState("blank");
 
   function togglePlay(str: string) {
-    ipcRenderer.send("testing", str);
+    if(current===reverseMap.get(str)) {
+
+    };
+    ipcRenderer.send("playit", str);
     setPopUp(true);
   };
 
-  function closePop() {
+  function closePop(name:string) {
     setPopUp(false);
+    setCurrent(name);
   };
 
   function pauseIt() {
@@ -65,11 +70,11 @@ const Main: React.FC<customProps> = (_props) => {
       <div className="content">
         <div className="container">
           <h1>Ryan Pitts</h1>
-          <button onClick={() => togglePlay("video_rp")}>Click Here</button>
+          <button onClick={() => togglePlay("Ryan Pitts Interview")}>Click Here</button>
         </div>
         <div className="container">
           <h1>Sunset</h1>
-          <button onClick={() => togglePlay("video_ss")}>Click Here</button>
+          <button onClick={() => togglePlay("Sunset Interview")}>Click Here</button>
         </div>
       </div>
     </div>

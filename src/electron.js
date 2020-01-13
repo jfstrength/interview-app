@@ -68,7 +68,7 @@ createWindow();
 ipc = electron.ipcMain;
 
 // onClick send name of the video to be selected to the player
-ipc.on("testing", (event, arg) => {
+ipc.on("playit", (event, arg) => {
     secondWindow.webContents.send("reply",arg);
 });
 

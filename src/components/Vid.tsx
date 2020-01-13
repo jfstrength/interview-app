@@ -25,7 +25,7 @@ const Vid: React.FC<customProps> = (_props) => {
     useEffect(()=>{
 
         ipcRenderer.on("reply",(_event: any,arg: any) => {
-            setSource(vidMap.get("countdown"));
+            setSource(vidMap.get("Countdown"));
             if(vidRef.current) {
                 vidRef.current.play();
                 vidRef.current.onended = () => {

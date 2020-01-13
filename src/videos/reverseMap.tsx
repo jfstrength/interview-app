@@ -1,5 +1,5 @@
-import video_ss from "./Sunset_Video.mp4";
-import video_rp from "./ryan-pitts.mp4";
+import Sunset_Interview from "./Sunset_Video.mp4";
+import Ryan_Pitts_Interview from "./ryan-pitts.mp4";
 import countdown from "./Countdown 5 Seconds HD.mp4";
 
 
@@ -8,8 +8,8 @@ import countdown from "./Countdown 5 Seconds HD.mp4";
 
 let reverseMap = new Map();
 
-reverseMap.set(video_ss,"Sunset video");
-reverseMap.set(video_rp,"Ryan Pitts interview");
-reverseMap.set(countdown,"countdown");
+reverseMap.set(Sunset_Interview,"Sunset Interview");
+reverseMap.set(Ryan_Pitts_Interview,"Ryan Pitts Interview");
+reverseMap.set(countdown,"Countdown");
 
 export default reverseMap;
