@@ -15,21 +15,24 @@ const Vid: React.FC<customProps> = (_props) => {
 
     function tellPlaying() {
         ipcRenderer.send("playing",source);
+        ipcRenderer.send("status",true);
     };
 
     function tellPaused() {
         ipcRenderer.send("paused",source);
+        ipcRenderer.send("status",false);
     };
 
     // Subscribe to event listeners on mount and remove them on unmount
     useEffect(()=>{
 
         ipcRenderer.on("reply",(_event: any,arg: any) => {
+
             setSource(vidMap.get("Countdown"));
             if(vidRef.current) {
                 vidRef.current.play();
                 vidRef.current.onended = () => {
-                    setSource(vidMap.get(arg));
+                    setSource(vidMap.get(arg.str));
                     if(vidRef.current) {
                     vidRef.current.play();
                     }
@@ -52,6 +55,13 @@ const Vid: React.FC<customProps> = (_props) => {
           ipcRenderer.removeAllListeners("pauseIt");
         };
       },[]);
+
+      let paused = vidRef.current?.paused;
+
+      useEffect(()=>{
+        ipcRenderer.send("status",!vidRef.current?.paused);
+      },[paused]);
+
 
 
     return(

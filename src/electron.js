@@ -75,15 +75,23 @@ ipc.on("playit", (event, arg) => {
 // on video playing notify UI screen
 ipc.on("playing",(event, arg) => {
     mainWindow.webContents.send("play",arg);
-    mainWindow.webContents.send("playPop");
 });
 
 // on video paused notify UI screen
-ipc.on("paused",(event, arg) => {
+ipc.on("paused",(event, arg) => {    
     mainWindow.webContents.send("paused",arg);
 });
 
 // onClick pause the video playing
 ipc.on("pause",(event, arg) => {
     secondWindow.webContents.send("pauseIt",arg);
+})
+
+ipc.on("status",(event,arg)=>{
+    console.log("status update: "+arg);
+    mainWindow.webContents.send("status",arg);
+})
+
+ipc.on("log",(event, arg) => {
+    console.log(arg);
 })

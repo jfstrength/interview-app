@@ -7,20 +7,27 @@ const ipcRenderer = electron.ipcRenderer;
 interface customProps {
     closer: Function;
     pauser: Function;
+    match: boolean;
+    vidName: string;
+    current: string;
+    ready: boolean;
+    playing: boolean;
+    changeVideo: Function;
+    target: string;
 }
 
 const PopUp : React.FC<customProps> = (props) => {
 
-    const[videoName,setVideoName]=useState("Your video is loading...");
-    const[current,setCurrent]=useState("");
-    const[buttonText,setButtonText]=useState("Pause");
-    const[ready, setReady]=useState(false);
+    const[videoName,setVideoName]=useState(props.vidName);
+    const[current,setCurrent]=useState(props.current);
+    const[buttonText,setButtonText]=useState(props.playing ? "Pause" : "Play");
+    const[ready, setReady]=useState(props.ready);
 
     useEffect(()=>{
         
         ipcRenderer.on("paused",(_event: any,arg: any)=>{
             if(arg !== vidMap.get("Countdown")) {
-              setCurrent(vidMap.get(arg));
+              setCurrent(arg);
               setVideoName(reverseMap.get(arg) + " is paused.");
             }
             setButtonText("Play");
@@ -28,9 +35,11 @@ const PopUp : React.FC<customProps> = (props) => {
     
         ipcRenderer.on("play",(_event: any,arg: any) => {
             if(arg !== vidMap.get("Countdown")) {
-              setCurrent(vidMap.get(arg));
+              setCurrent(arg);
               setVideoName(reverseMap.get(arg) + " is playing.");
               setReady(true);
+            } else {
+            setReady(false);
             }
             setButtonText("Pause");
           });
@@ -42,19 +51,32 @@ const PopUp : React.FC<customProps> = (props) => {
 
       },[]);
 
+      function selector() {
+        if(ready && props.match) {
+          return <div className="buttons"> 
+          <button onClick={()=>props.pauser()}>{buttonText}</button>
+          <button onClick={()=>props.closer(current)}>Keep browsing</button>
+          </div>;
+        }
+
+        if(!props.match) {
+          return <div className="buttons">
+          <button onClick={()=>props.changeVideo(props.target)}>Change Video</button> 
+          <button onClick={()=>props.closer(current)}>Keep browsing</button>
+          </div>
+        }
+
+        return null;
+      }
+
     return(
         <div className="pop">
             <div>
-              <p>{videoName}</p>
-              {ready ? 
-              <div className="buttons"> 
-                  <button onClick={()=>props.pauser()}>{buttonText}</button>
-                  <button onClick={()=>props.closer(current)}>Keep browsing</button>
-              </div>
-                : null}
+              <p key={videoName}>{videoName}</p>
+              {selector()}
               </div>
             </div>
     )
-}
+};
 
 export default PopUp;

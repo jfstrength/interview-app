@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import stars from "../stars.png";
 import PopUp from "./PopUp";
 import reverseMap from "../videos/reverseMap";
+import vidMap from "../videos/vidMap";
 const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer;
 
@@ -15,25 +16,72 @@ const Main: React.FC<customProps> = (_props) => {
 
   const [popUp,setPopUp] = useState(false);
   const [current, setCurrent] = useState("blank");
+  const [match,setMatch] = useState(true);
+  const [vidName, setVidName] = useState("Your video is loading...");
+  const [playing, setPlaying] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [target, setTarget] =useState("");
+
+  let playPass = {
+    str: "",
+  };
 
   function togglePlay(str: string) {
-    if(current===reverseMap.get(str)) {
 
-    };
-    ipcRenderer.send("playit", str);
+    setTarget(str);
+    
+    // The video is already loaded
+    if(current===vidMap.get(str)) {
+      setReady(true);
+      if(playing) {
+        setVidName(str+" is playing.");
+      } else {
+        setVidName(str+" is paused.");
+      }
+      setPopUp(true);
+      return;
+    }
+
+    // A different video is loaded
+    if(current!=="blank" && current!== vidMap.get(str)) {
+      setMatch(false);
+      setVidName("Are you sure you want to change videos?");
+      setPopUp(true);
+      return;
+    }
+
+    // Initial loading
+    if(current==="blank") {
+      playPass.str=str;
+      ipcRenderer.send("playit",playPass);
+      return;
+    }
+
+    // No video is loaded
+    changeVideo(str);
+  }
+
+  function changeVideo(str:string) {
+    closePop(vidMap.get(str));
+    setReady(false);
+    setVidName("Your video is loading...");
+    console.log(vidName);
     setPopUp(true);
-  };
+    playPass.str=str;
+    ipcRenderer.send("playit",playPass);
+  }
 
   function closePop(name:string) {
-    setPopUp(false);
+    setMatch(true);
     setCurrent(name);
-  };
+    setPopUp(false);
+  }
 
   function pauseIt() {
     ipcRenderer.send("pause");
-  };
+  }
 
-  // Set popUp timer
+  // Set popUp timer (currently 60 seconds)
   useEffect(()=>{
       const timer = setTimeout(()=>{
         if(popUp===true) {
@@ -46,19 +94,24 @@ const Main: React.FC<customProps> = (_props) => {
   // Subscribe to event listeners on mount and remove them on unmount
   useEffect(()=>{
 
-    ipcRenderer.on("playPop",(_event: any,_arg: any) => {
+    ipcRenderer.on("status",(_event: any,arg: any) => {
+      setPlaying(arg);
+    });
+
+    ipcRenderer.on("play",(_event: any,_arg: any) => {
       setPopUp(true);
     });
 
     return()=> {
-      ipcRenderer.removeAllListeners("playPop");
+      ipcRenderer.removeAllListeners("status");
+      ipcRenderer.removeAllListeners("play");
     }
 
   },[]);
 
   return (
     <div className="App">
-      {popUp ?  <PopUp pauser={pauseIt} closer={closePop}/> : null}
+      {popUp ?  <PopUp target={target} changeVideo={changeVideo} playing={playing} ready={ready} current={current} vidName={vidName} match={match} pauser={pauseIt} closer={closePop}/> : null}
       <header className="App-header">
         <div className="image-holder">
         <img src={stars} className="App-logo" alt="logo" />
