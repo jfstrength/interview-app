@@ -87,11 +87,12 @@ ipc.on("pause",(event, arg) => {
     secondWindow.webContents.send("pauseIt",arg);
 })
 
+// notify UI if video playing or paused
 ipc.on("status",(event,arg)=>{
-    console.log("status update: "+arg);
     mainWindow.webContents.send("status",arg);
 })
 
+// Easy debug logging
 ipc.on("log",(event, arg) => {
     console.log(arg);
 })

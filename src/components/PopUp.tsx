@@ -72,7 +72,7 @@ const PopUp : React.FC<customProps> = (props) => {
     return(
         <div className="pop">
             <div>
-              <p key={videoName}>{videoName}</p>
+              <p>{videoName}</p>
               {selector()}
               </div>
             </div>

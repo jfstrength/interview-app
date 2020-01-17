@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import stars from "../stars.png";
 import PopUp from "./PopUp";
-import reverseMap from "../videos/reverseMap";
 import vidMap from "../videos/vidMap";
 const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer;
@@ -47,6 +46,7 @@ const Main: React.FC<customProps> = (_props) => {
       setMatch(false);
       setVidName("Are you sure you want to change videos?");
       setPopUp(true);
+      console.log("Toggle exit");
       return;
     }
 
@@ -57,28 +57,32 @@ const Main: React.FC<customProps> = (_props) => {
       return;
     }
 
-    // No video is loaded
-    changeVideo(str);
-  }
+  };
 
   function changeVideo(str:string) {
     closePop(vidMap.get(str));
-    setReady(false);
     setVidName("Your video is loading...");
-    console.log(vidName);
+    ipcRenderer.send("log","ready: "+ready);
+    ipcRenderer.send("log","popUp: "+popUp);
+    setReady(false);
     setPopUp(true);
+    ipcRenderer.send("log","ready: "+ready);
+    ipcRenderer.send("log","popUp: "+popUp);
     playPass.str=str;
     ipcRenderer.send("playit",playPass);
+    return;
   }
 
   function closePop(name:string) {
     setMatch(true);
     setCurrent(name);
     setPopUp(false);
+    return;
   }
 
   function pauseIt() {
     ipcRenderer.send("pause");
+    return;
   }
 
   // Set popUp timer (currently 60 seconds)
