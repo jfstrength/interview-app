@@ -65,34 +65,29 @@ createWindow();
 });
 
 // IPCmain communicates between the selection and player windows
+// no need to remove listeners, ipcMain closes and opens only with the app
 ipc = electron.ipcMain;
 
 // onClick send name of the video to be selected to the player
-ipc.on("playit", (event, arg) => {
-    secondWindow.webContents.send("reply",arg);
-});
-
-// on video playing notify UI screen
-ipc.on("playing",(event, arg) => {
-    mainWindow.webContents.send("play",arg);
-});
-
-// on video paused notify UI screen
-ipc.on("paused",(event, arg) => {    
-    mainWindow.webContents.send("paused",arg);
+ipc.on("playIt", (event, arg) => {
+        secondWindow.webContents.send("playIt",arg);
 });
 
 // onClick pause the video playing
-ipc.on("pause",(event, arg) => {
-    secondWindow.webContents.send("pauseIt",arg);
-})
+ipc.on("pauseIt",(event, arg) => {
+        secondWindow.webContents.send("pauseIt",arg);
+});
 
 // notify UI if video playing or paused
+// notify UI of current vido path
+// arg = [playing, source]
 ipc.on("status",(event,arg)=>{
-    mainWindow.webContents.send("status",arg);
-})
+\        mainWindow.webContents.send("statusMain",arg);
+        mainWindow.webContents.send("statusPop",arg);
+
+});
 
 // Easy debug logging
 ipc.on("log",(event, arg) => {
     console.log(arg);
-})
+});

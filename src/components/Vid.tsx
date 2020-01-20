@@ -10,29 +10,34 @@ interface customProps {
 
 const Vid: React.FC<customProps> = (_props) => {
 
-    const [source,setSource] = useState("");
+    // the path name of the current video
+    const [source,setSource] = useState(" ");
+    // playing status of the video
+    const [playing,setPlaying] = useState(false);
+
+    // use a reference to trigger the play() method
     const vidRef = useRef<HTMLVideoElement>(null);
 
+    // notify the UI that the video is playing
     function tellPlaying() {
-        ipcRenderer.send("playing",source);
-        ipcRenderer.send("status",true);
-    };
+        setPlaying(true);
+    }
 
+    // notify the Ui that the video is paused
     function tellPaused() {
-        ipcRenderer.send("paused",source);
-        ipcRenderer.send("status",false);
-    };
+        setPlaying(false);
+    }
 
     // Subscribe to event listeners on mount and remove them on unmount
     useEffect(()=>{
 
-        ipcRenderer.on("reply",(_event: any,arg: any) => {
-
+        // when told to load a new Video, load it and countdown
+        ipcRenderer.on("playIt",(_event: any,arg: any) => {
             setSource(vidMap.get("Countdown"));
             if(vidRef.current) {
                 vidRef.current.play();
                 vidRef.current.onended = () => {
-                    setSource(vidMap.get(arg.str));
+                    setSource(vidMap.get(arg));
                     if(vidRef.current) {
                     vidRef.current.play();
                     }
@@ -40,6 +45,7 @@ const Vid: React.FC<customProps> = (_props) => {
             }
         });
 
+        // when told to pause or play, change the video as needed
         ipcRenderer.on("pauseIt",(_event: any,_arg: any)=>{
             if(vidRef.current) {
                 if(vidRef.current.paused) {
@@ -50,19 +56,17 @@ const Vid: React.FC<customProps> = (_props) => {
             }
         });
 
+        // remove event listeners on unmount
         return () => {
-          ipcRenderer.removeAllListeners("reply");
+          ipcRenderer.removeAllListeners("playIt");
           ipcRenderer.removeAllListeners("pauseIt");
         };
       },[]);
 
-      let paused = vidRef.current?.paused;
-
+      // notify UI of video paused status
       useEffect(()=>{
-        ipcRenderer.send("status",!vidRef.current?.paused);
-      },[paused]);
-
-
+        ipcRenderer.send("status",[playing,source]);
+      },[playing,source]);
 
     return(
         <div className="box">

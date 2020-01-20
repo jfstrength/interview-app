@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import stars from "../stars.png";
 import PopUp from "./PopUp";
 import vidMap from "../videos/vidMap";
+import reverseMap from "../videos/reverseMap";
 const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer;
 
@@ -13,75 +14,77 @@ interface customProps {
 
 const Main: React.FC<customProps> = (_props) => {
 
+  // whether to show the popUp or not
   const [popUp,setPopUp] = useState(false);
-  const [current, setCurrent] = useState("blank");
+  // the path name of the current video
+  const [currentVideo, setCurrentVideo] = useState(" ");
+  // whether the popUp is for the current video or not
   const [match,setMatch] = useState(true);
-  const [vidName, setVidName] = useState("Your video is loading...");
+  // primary text for the popUp
+  const [popText, setPopText] = useState(" ");
+  // playing status of the video
   const [playing, setPlaying] = useState(false);
-  const [ready, setReady] = useState(false);
-  const [target, setTarget] =useState("");
+  // whether to show the video or if not, show the countdown
+  const [loaded, setLoaded] = useState(false);
+  // where the popUp buttons route to
+  const [target, setTarget] =useState(" ");
 
-  let playPass = {
-    str: "",
-  };
 
-  function togglePlay(str: string) {
+  // open a popUp (str == text name of the video)
+  function showPopUp(str: string) {
 
+    console.log(currentVideo);
+
+    // Tell the popUp which video to load
     setTarget(str);
     
     // The video is already loaded
-    if(current===vidMap.get(str)) {
-      setReady(true);
+    if(currentVideo===vidMap.get(str)) {
+      setLoaded(true);
       if(playing) {
-        setVidName(str+" is playing.");
+        setPopText(str+" is playing.");
       } else {
-        setVidName(str+" is paused.");
+        setPopText(str+" is paused.");
       }
       setPopUp(true);
       return;
     }
 
     // A different video is loaded
-    if(current!=="blank" && current!== vidMap.get(str)) {
+    if(currentVideo!==" " && currentVideo!== vidMap.get(str)) {
       setMatch(false);
-      setVidName("Are you sure you want to change videos?");
       setPopUp(true);
-      console.log("Toggle exit");
       return;
     }
 
     // Initial loading
-    if(current==="blank") {
-      playPass.str=str;
-      ipcRenderer.send("playit",playPass);
+    if(currentVideo===" ") {
+      console.log("Initial");
+      ipcRenderer.send("playIt",str);
       return;
     }
 
-  };
+  }
 
+  // Switch videos
   function changeVideo(str:string) {
     closePop(vidMap.get(str));
-    setVidName("Your video is loading...");
-    ipcRenderer.send("log","ready: "+ready);
-    ipcRenderer.send("log","popUp: "+popUp);
-    setReady(false);
     setPopUp(true);
-    ipcRenderer.send("log","ready: "+ready);
-    ipcRenderer.send("log","popUp: "+popUp);
-    playPass.str=str;
-    ipcRenderer.send("playit",playPass);
+    ipcRenderer.send("playIt",str);
     return;
   }
 
-  function closePop(name:string) {
+  // Close the popUp
+  function closePop(str:string) {
     setMatch(true);
-    setCurrent(name);
+    setCurrentVideo(str);
     setPopUp(false);
     return;
   }
 
+  // Pause the video (sent to popUp)
   function pauseIt() {
-    ipcRenderer.send("pause");
+    ipcRenderer.send("pauseIt");
     return;
   }
 
@@ -98,24 +101,38 @@ const Main: React.FC<customProps> = (_props) => {
   // Subscribe to event listeners on mount and remove them on unmount
   useEffect(()=>{
 
-    ipcRenderer.on("status",(_event: any,arg: any) => {
-      setPlaying(arg);
+    // Capture the playing status of the video
+    // set the popUp if the video is playing
+    // arg = [playing, source]
+    ipcRenderer.on("statusMain",(_event: any,arg: any) => {
+      setPlaying(arg[0]);
+      setCurrentVideo(arg[1]);
+      if(arg[0]===true) {
+        setPopUp(true);
+      }
     });
 
-    ipcRenderer.on("play",(_event: any,_arg: any) => {
-      setPopUp(true);
-    });
-
+    // Remove listeners on unmount
     return()=> {
-      ipcRenderer.removeAllListeners("status");
-      ipcRenderer.removeAllListeners("play");
+      ipcRenderer.removeAllListeners("statusMain");
     }
 
   },[]);
 
+  // output text of loaded status for header
+  function loadText() {
+    let str = reverseMap.get(currentVideo)
+    if(str !== "Countdown" && str !== undefined) {
+      return <p>Currently loaded: {reverseMap.get(currentVideo)}</p>
+    } else {
+      return null;
+    }
+  }
+
+  // Rendered Component
   return (
     <div className="App">
-      {popUp ?  <PopUp target={target} changeVideo={changeVideo} playing={playing} ready={ready} current={current} vidName={vidName} match={match} pauser={pauseIt} closer={closePop}/> : null}
+      {popUp ?  <PopUp target={target} changeVideo={changeVideo} playing={playing} ready={loaded} current={currentVideo} vidText={popText} match={match} pauser={pauseIt} closer={closePop}/> : null}
       <header className="App-header">
         <div className="image-holder">
         <img src={stars} className="App-logo" alt="logo" />
@@ -123,19 +140,20 @@ const Main: React.FC<customProps> = (_props) => {
         <p>
           Interview Database UI
         </p>
+        {loadText()}
       </header>
       <div className="content">
         <div className="container">
           <h1>Ryan Pitts</h1>
-          <button onClick={() => togglePlay("Ryan Pitts Interview")}>Click Here</button>
+          <button onClick={() => showPopUp("Ryan Pitts Interview")}>Click Here</button>
         </div>
         <div className="container">
           <h1>Sunset</h1>
-          <button onClick={() => togglePlay("Sunset Interview")}>Click Here</button>
+          <button onClick={() => showPopUp("Sunset Interview")}>Click Here</button>
         </div>
       </div>
     </div>
     )
-  };
+  }
 
   export default Main;
