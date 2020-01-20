@@ -82,7 +82,7 @@ ipc.on("pauseIt",(event, arg) => {
 // notify UI of current vido path
 // arg = [playing, source]
 ipc.on("status",(event,arg)=>{
-\        mainWindow.webContents.send("statusMain",arg);
+        mainWindow.webContents.send("statusMain",arg);
         mainWindow.webContents.send("statusPop",arg);
 
 });
