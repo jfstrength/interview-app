@@ -27,13 +27,11 @@ const Main: React.FC<customProps> = (_props) => {
   // whether to show the video or if not, show the countdown
   const [loaded, setLoaded] = useState(false);
   // where the popUp buttons route to
-  const [target, setTarget] =useState(" ");
+  const [target, setTarget] = useState(" ");
 
 
   // open a popUp (str == text name of the video)
   function showPopUp(str: string) {
-
-    console.log(currentVideo);
 
     // Tell the popUp which video to load
     setTarget(str);
@@ -59,7 +57,6 @@ const Main: React.FC<customProps> = (_props) => {
 
     // Initial loading
     if(currentVideo===" ") {
-      console.log("Initial");
       ipcRenderer.send("playIt",str);
       return;
     }
@@ -79,7 +76,7 @@ const Main: React.FC<customProps> = (_props) => {
     setMatch(true);
     setCurrentVideo(str);
     setPopUp(false);
-    return;
+   return;
   }
 
   // Pause the video (sent to popUp)
@@ -87,6 +84,8 @@ const Main: React.FC<customProps> = (_props) => {
     ipcRenderer.send("pauseIt");
     return;
   }
+  
+
 
   // Set popUp timer (currently 60 seconds)
   useEffect(()=>{
@@ -119,6 +118,12 @@ const Main: React.FC<customProps> = (_props) => {
 
   },[]);
 
+  useEffect(()=> {
+    if(currentVideo===" ") {
+      setPopUp(false);
+    }
+  },[currentVideo]);
+
   // output text of loaded status for header
   function loadText() {
     let str = reverseMap.get(currentVideo)
@@ -132,7 +137,10 @@ const Main: React.FC<customProps> = (_props) => {
   // Rendered Component
   return (
     <div className="App">
-      {popUp ?  <PopUp target={target} changeVideo={changeVideo} playing={playing} ready={loaded} current={currentVideo} vidText={popText} match={match} pauser={pauseIt} closer={closePop}/> : null}
+      {popUp ?  <PopUp target={target} changeVideo={changeVideo} playing={playing}
+                  ready={loaded} current={currentVideo} vidText={popText} match={match}
+                  pauser={pauseIt} closer={closePop}/>
+                : null}
       <header className="App-header">
         <div className="image-holder">
         <img src={stars} className="App-logo" alt="logo" />

@@ -61,16 +61,15 @@ const PopUp : React.FC<customProps> = (props) => {
 
       // Make sure the loading text is correct
       useEffect(()=>{
-        if(!ready){
-          setVideoText("Your video is loading...");
-        }
-      },[ready]);
-
-      useEffect(()=>{
         if(!props.match){
           setVideoText("Are you sure you want to change videos?");
+          return;
         }
-      },[props.match]);
+        if(!ready){
+          setVideoText("Your video is loading...");
+          return;
+        }
+      },[props.match, ready]);
 
       // Determine which type of popUp to render
       function selector() {

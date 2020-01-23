@@ -49,9 +49,34 @@ img {
 .box {
   display: flex;
   flex-grow: 1;
+  align-content: center;
   justify-content: center;
   height: 100%;
   width: 100%;
+  background-color: #282c34;
+}
+
+.box > div {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+
+.box > * > img {
+  height: 400px;
+}
+
+.box > * > h1 {
+  text-align: center;
+  text-justify: center;
+  color: white;
+  border: rgb(146,130,91) solid;
+  border-radius: 5px;
+  height: 100px;
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .container {
@@ -87,7 +112,7 @@ img {
 
 .pop > div {
   padding: 15px;
-  border: 1px solid red;
+  border: 1px solid rgb(146,130,91);
   border-radius: 5px;
   background-color: grey;
   animation-name: fadeIn;
@@ -114,4 +139,8 @@ img {
 @keyframes fadeIn {
   0% {opacity: 0;}
   100% {opacity: 1;}
+}
+
+button {
+  background-color: white;
 }

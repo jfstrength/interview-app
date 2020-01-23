@@ -4,27 +4,50 @@ const BrowserWindow = electron.BrowserWindow;
 const path = require("path");
 const isDev = require("electron-is-dev");
 
-// This is the Electron app configuration it contains event emitters
+// This is the Electron app configuration. It contains event emitters
 // for the app process and also for the ICPmain between windows
 
 let mainWindow;
 let secondWindow;
 
-// Creates both the player window and selection window on startup
+// Creates both the player window and selection window on startup (ready)
 function createWindow() {
 
-    //TEMP for DEV alignment
-    let display = electron.screen.getPrimaryDisplay();
-    let width = display.bounds.width;
-    let height = display.bounds.height;
+    let devMode = false;
+    let display;
+    let width;
+    let height;
+    let x_pos;
+    let y_pos;
+    let displays;
 
+    // Run on one screen for dev testing
+    if(devMode===true) {
+        display = electron.screen.getPrimaryDisplay();
+        width = display.bounds.width;
+        height = display.bounds.height;
+        x_pos = 0;
+        y_pos = 0;
+    } else {
+    // Get the external display screen and its dimensions/positions
+        displays = electron.screen.getAllDisplays();
+        externalDisplay = displays.find((display) => {
+        return display.bounds.x !== 0 || display.bounds.y !== 0;
+    });
+        x_pos = externalDisplay.bounds.x + externalDisplay.bounds.width/2 - 900/2;
+        y_pos = externalDisplay.bounds.y + externalDisplay.bounds.height/2 - 680/2;
+    }
+
+    // Create first window
     mainWindow = new BrowserWindow({ frame: false, width: 900, height: 680, webPreferences: {
         nodeIntegration: true
     }});
 
     //TEMP for DEV alignment
-    mainWindow.setPosition(width/2 - (900/2) - 450,height/2 - (680/2));
-    
+    if(devMode===true)
+        mainWindow.setPosition(width/2 - (900/2) - 450,height/2 - (680/2));
+
+    // Load UI into the first window
     mainWindow.loadURL(
     isDev
     ? "http://localhost:3000/"
@@ -32,13 +55,17 @@ function createWindow() {
     );
     mainWindow.on("closed", () => (mainWindow = null));
 
-    secondWindow = new BrowserWindow({frame: false, width: 900, height: 680, webPreferences: {
+
+    // Create second window
+    secondWindow = new BrowserWindow({x: x_pos, y: y_pos, frame: false, width: 900, height: 680, webPreferences: {
         nodeIntegration: true
     }});
 
     //TEMP for DEV alignment
-    secondWindow.setPosition(width/2 - (900/2) + 450,height/2 - (680/2));
-    
+    if(devMode===true)
+        secondWindow.setPosition(width/2 - (900/2) + 450,height/2 - (680/2));
+   
+    // Load video player into second window
     secondWindow.loadURL(
         isDev
         ? "http://localhost:3000/vid"
