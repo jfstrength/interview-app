@@ -29,7 +29,6 @@ const Main: React.FC<customProps> = (_props) => {
   // where the popUp buttons route to
   const [target, setTarget] = useState(" ");
 
-
   // open a popUp (str == text name of the video)
   function showPopUp(str: string) {
 
@@ -77,6 +76,11 @@ const Main: React.FC<customProps> = (_props) => {
     setCurrentVideo(str);
     setPopUp(false);
    return;
+  }
+
+  // Close the PopUp with an animation
+  function endPopUp() {
+    setPopUp(false);
   }
 
   // Pause the video (sent to popUp)
@@ -134,13 +138,23 @@ const Main: React.FC<customProps> = (_props) => {
     }
   }
 
-  // Rendered Component
+  function popSelector() {
+    if(popUp) {
+      return (
+      <PopUp target={target} 
+        changeVideo={changeVideo} playing={playing}
+        ready={loaded} current={currentVideo} vidText={popText} match={match}
+        pauser={pauseIt} closer={closePop}/>
+        )
+    } else {
+      return null;
+    }
+  }
+
+  // Rendered Component 
   return (
     <div className="App">
-      {popUp ?  <PopUp target={target} changeVideo={changeVideo} playing={playing}
-                  ready={loaded} current={currentVideo} vidText={popText} match={match}
-                  pauser={pauseIt} closer={closePop}/>
-                : null}
+      {popSelector()}
       <header className="App-header">
         <div className="image-holder">
         <img src={stars} className="App-logo" alt="logo" />

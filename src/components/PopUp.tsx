@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import reverseMap from "../videos/reverseMap";
 import vidMap from "../videos/vidMap";
+import {CSSTransition} from "react-transition-group";
 const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer;
 
@@ -26,10 +27,12 @@ const PopUp : React.FC<customProps> = (props) => {
     const[buttonText,setButtonText]=useState(props.playing ? "Pause" : "Play");
     // whether to show the video or if not, show the countdown
     const[ready, setReady]=useState(props.ready);
-
+    // state which triggers animation on change
+    const[doneWaiting, setDoneWaiting]=useState(false);
 
     // Subscribe to event listeners on mount and remove them on unmount
     useEffect(()=>{
+
 
       // When the video plays, change the text to reflect
       // arg = [playing, source]
@@ -59,6 +62,11 @@ const PopUp : React.FC<customProps> = (props) => {
 
       },[]);
 
+      // trigger the fade animation on entrance
+      useEffect(()=>{
+        setDoneWaiting(true);
+      },[]);
+
       // Make sure the loading text is correct
       useEffect(()=>{
         if(!props.match){
@@ -72,7 +80,7 @@ const PopUp : React.FC<customProps> = (props) => {
       },[props.match, ready]);
 
       // Determine which type of popUp to render
-      function selector() {
+      function buttonSelector() {
 
         // popUp for an already playing video
         if(ready && props.match) {
@@ -95,13 +103,15 @@ const PopUp : React.FC<customProps> = (props) => {
 
     // Rendered component
     return(
-        <div className="pop">
-            <div>
-              <p>{videoText}</p>
-              {selector()}
-              </div>
-            </div>
-    )
+      <div className="pop">
+        <CSSTransition mountOnEnter in={doneWaiting} timeout={400} classNames="fader">
+          <div key="fade">
+            <p>{videoText}</p>
+            {buttonSelector()}
+          </div>
+        </CSSTransition>
+      </div> 
+        )
 }
 
 export default PopUp;

@@ -2,6 +2,7 @@ const electron = require("electron");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require("path");
+const url = require("url");
 const isDev = require("electron-is-dev");
 
 // This is the Electron app configuration. It contains event emitters
@@ -14,65 +15,54 @@ let secondWindow;
 function createWindow() {
 
     let devMode = false;
-    let display;
-    let width;
-    let height;
-    let x_pos;
-    let y_pos;
-    let displays;
+    let main_display, displays;
+    let width, height;
+    let main_window_height, main_window_width, second_width, second_height;
+    let x_pos, y_pos;
 
-    // Run on one screen for dev testing
-    if(devMode===true) {
-        display = electron.screen.getPrimaryDisplay();
-        width = display.bounds.width;
-        height = display.bounds.height;
-        x_pos = 0;
-        y_pos = 0;
-    } else {
     // Get the external display screen and its dimensions/positions
-        displays = electron.screen.getAllDisplays();
-        externalDisplay = displays.find((display) => {
-        return display.bounds.x !== 0 || display.bounds.y !== 0;
-    });
-        x_pos = externalDisplay.bounds.x + externalDisplay.bounds.width/2 - 900/2;
-        y_pos = externalDisplay.bounds.y + externalDisplay.bounds.height/2 - 680/2;
-    }
+    //     displays = electron.screen.getAllDisplays();
+    //     externalDisplay = displays.find((display) => {
+    //     return display.bounds.x !== 0 || display.bounds.y !== 0;
+    // });
+    //     x_pos = externalDisplay.bounds.x + 50;
+    //     y_pos = externalDisplay.bounds.y + 50;
+
+    main_display = electron.screen.getPrimaryDisplay();
+    
 
     // Create first window
-    mainWindow = new BrowserWindow({ frame: false, width: 900, height: 680, webPreferences: {
+    mainWindow = new BrowserWindow({ x: 0, y: 0, show: false, frame: false, webPreferences: {
         nodeIntegration: true
     }});
-
-    //TEMP for DEV alignment
-    if(devMode===true)
-        mainWindow.setPosition(width/2 - (900/2) - 450,height/2 - (680/2));
+    mainWindow.setKiosk(true);
+    mainWindow.show();
 
     // Load UI into the first window
     mainWindow.loadURL(
     isDev
     ? "http://localhost:3000/"
-    : `file://${path.join(__dirname, "../build/index.html/")}`
+    :  `file://${path.join(__dirname, "index.html")}`
     );
     mainWindow.on("closed", () => (mainWindow = null));
 
-
     // Create second window
-    secondWindow = new BrowserWindow({x: x_pos, y: y_pos, frame: false, width: 900, height: 680, webPreferences: {
+    secondWindow = new BrowserWindow({x: 0, y: 0, show: false, frame: false,  webPreferences: {
         nodeIntegration: true
     }});
+    secondWindow.setFullScreen(true);
+    secondWindow.show();
 
-    //TEMP for DEV alignment
-    if(devMode===true)
-        secondWindow.setPosition(width/2 - (900/2) + 450,height/2 - (680/2));
-   
     // Load video player into second window
     secondWindow.loadURL(
         isDev
         ? "http://localhost:3000/vid"
-        : `file://${path.join(__dirname, "../build/index.html/vid")}`
+        : `file://${path.join(__dirname, "index.html/vid")}`
         );
     secondWindow.on("closed", () => (secondWindow = null));
+
 }
+
 
 // Calls createWindow when background is ready
 app.on("ready", createWindow)
@@ -90,6 +80,8 @@ if (mainWindow === null) {
 createWindow();
 }
 });
+
+app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true')
 
 // IPCmain communicates between the selection and player windows
 // no need to remove listeners, ipcMain closes and opens only with the app

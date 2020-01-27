@@ -115,8 +115,6 @@ img {
   border: 1px solid rgb(146,130,91);
   border-radius: 5px;
   background-color: grey;
-  animation-name: fadeIn;
-  animation-duration: 0.5s;
   display: flex;
   flex-direction: column;
 }
@@ -136,11 +134,33 @@ img {
   margin: 5px;
 }
 
-@keyframes fadeIn {
-  0% {opacity: 0;}
-  100% {opacity: 1;}
-}
-
 button {
   background-color: white;
+}
+
+.fader-enter {
+  opacity: 0;
+}
+
+.fader-enter-active {
+  opacity: 1;
+  transition: opacity 400ms;
+}
+
+.fader-appear {
+  opacity: 0;
+}
+
+.fader-appear-active {
+  opacity: 1;
+  transition: opacity 400ms;
+}
+
+.fader-exit {
+  opacity: 1;
+}
+
+.fader-exit-active {
+  opacity: 0;
+  transition: opacity 400ms;
 }

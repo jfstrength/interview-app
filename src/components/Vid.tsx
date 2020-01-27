@@ -84,7 +84,7 @@ const Vid: React.FC<customProps> = (_props) => {
       },[source,playing])
 
       // Choose either the default screen or the video player
-      function selector() {
+      function defaultSelector() {
           if(source===" ") {
               return (<div><img src={stars} className="App-logo" alt="logo" />
               <h1>Please use the kiosk to load an interview.</h1></div>)
@@ -96,7 +96,7 @@ const Vid: React.FC<customProps> = (_props) => {
 
     return(
         <div className="box">
-            {selector()}
+            {defaultSelector()}
         </div>
     )
 }
