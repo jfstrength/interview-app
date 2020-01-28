@@ -138,29 +138,19 @@ button {
   background-color: white;
 }
 
-.fader-enter {
-  opacity: 0;
+.fade {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 0.5s;
 }
 
-.fader-enter-active {
-  opacity: 1;
-  transition: opacity 400ms;
-}
-
-.fader-appear {
-  opacity: 0;
-}
-
-.fader-appear-active {
-  opacity: 1;
-  transition: opacity 400ms;
-}
-
-.fader-exit {
-  opacity: 1;
-}
-
-.fader-exit-active {
-  opacity: 0;
-  transition: opacity 400ms;
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }

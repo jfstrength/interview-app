@@ -78,27 +78,23 @@ const Main: React.FC<customProps> = (_props) => {
    return;
   }
 
-  // Close the PopUp with an animation
-  function endPopUp() {
-    setPopUp(false);
-  }
-
-  // Pause the video (sent to popUp)
+  // Pause the video (triggered from popUp)
   function pauseIt() {
     ipcRenderer.send("pauseIt");
     return;
   }
   
-
-
   // Set popUp timer (currently 60 seconds)
   useEffect(()=>{
+
       const timer = setTimeout(()=>{
         if(popUp===true) {
           setPopUp(false);
         }
       },60*1000);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   },[popUp])
 
   // Subscribe to event listeners on mount and remove them on unmount
@@ -140,11 +136,14 @@ const Main: React.FC<customProps> = (_props) => {
 
   function popSelector() {
     if(popUp) {
-      return (
-      <PopUp target={target} 
-        changeVideo={changeVideo} playing={playing}
-        ready={loaded} current={currentVideo} vidText={popText} match={match}
-        pauser={pauseIt} closer={closePop}/>
+      return (  
+          <div className="fade">       
+          <PopUp target={target}
+          changeVideo={changeVideo} playing={playing}
+          ready={loaded} current={currentVideo} 
+          vidText={popText} match={match}
+          pauser={pauseIt} closer={closePop}/>
+          </div> 
         )
     } else {
       return null;

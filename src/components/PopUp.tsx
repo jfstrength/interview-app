@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import reverseMap from "../videos/reverseMap";
 import vidMap from "../videos/vidMap";
-import {CSSTransition} from "react-transition-group";
 const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer;
 
@@ -27,8 +26,6 @@ const PopUp : React.FC<customProps> = (props) => {
     const[buttonText,setButtonText]=useState(props.playing ? "Pause" : "Play");
     // whether to show the video or if not, show the countdown
     const[ready, setReady]=useState(props.ready);
-    // state which triggers animation on change
-    const[doneWaiting, setDoneWaiting]=useState(false);
 
     // Subscribe to event listeners on mount and remove them on unmount
     useEffect(()=>{
@@ -60,11 +57,6 @@ const PopUp : React.FC<customProps> = (props) => {
           ipcRenderer.removeAllListeners("statusPop");
         };
 
-      },[]);
-
-      // trigger the fade animation on entrance
-      useEffect(()=>{
-        setDoneWaiting(true);
       },[]);
 
       // Make sure the loading text is correct
@@ -102,14 +94,12 @@ const PopUp : React.FC<customProps> = (props) => {
       }
 
     // Rendered component
-    return(
+    return(        
       <div className="pop">
-        <CSSTransition mountOnEnter in={doneWaiting} timeout={400} classNames="fader">
-          <div key="fade">
-            <p>{videoText}</p>
-            {buttonSelector()}
-          </div>
-        </CSSTransition>
+        <div key="fade">
+          <p>{videoText}</p>
+          {buttonSelector()}
+        </div>
       </div> 
         )
 }
