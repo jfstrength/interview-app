@@ -17,6 +17,8 @@ const Vid: React.FC<customProps> = (_props) => {
     const [playing,setPlaying] = useState(false);
     // use a reference to trigger the play() method
     const vidRef = useRef<HTMLVideoElement>(null);
+    //
+    const [fadeOut,setFadeOut] = useState(false);
 
     // notify the UI that the video is playing
     function tellPlaying() {
@@ -83,6 +85,15 @@ const Vid: React.FC<customProps> = (_props) => {
         }
       },[source,playing])
 
+      useEffect(()=>{
+          if(playing) {
+          setFadeOut(true)
+          setTimeout(()=>{
+            setFadeOut(false);
+          },0.5*1000)
+        }
+      },[playing])
+
       // Choose either the default screen or the video player
       function defaultSelector() {
           if(source===" ") {
@@ -94,9 +105,19 @@ const Vid: React.FC<customProps> = (_props) => {
           </video>);
       }
 
+      //
+      function popSelector() {
+          if(!playing && source!==" " && source!==vidMap.get("Countdown")) {
+              return (
+                  <div className={fadeOut ? "pop fadeOut" : "pop fadeIn"}><div><p>PAUSED</p></div></div>
+              )
+          } else return null;
+      }
+
     return(
         <div className="box">
             {defaultSelector()}
+            {popSelector()}
         </div>
     )
 }

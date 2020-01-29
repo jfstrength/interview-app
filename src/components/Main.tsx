@@ -28,6 +28,8 @@ const Main: React.FC<customProps> = (_props) => {
   const [loaded, setLoaded] = useState(false);
   // where the popUp buttons route to
   const [target, setTarget] = useState(" ");
+  //
+  const [fadeOut, setFadeOut] = useState(false);
 
   // open a popUp (str == text name of the video)
   function showPopUp(str: string) {
@@ -72,9 +74,13 @@ const Main: React.FC<customProps> = (_props) => {
 
   // Close the popUp
   function closePop(str:string) {
-    setMatch(true);
-    setCurrentVideo(str);
-    setPopUp(false);
+    setFadeOut(true);
+    setTimeout(()=>{
+      setPopUp(false);
+      setMatch(true);
+      setCurrentVideo(str);
+      setFadeOut(false);
+    },0.5*1000)
    return;
   }
 
@@ -137,7 +143,7 @@ const Main: React.FC<customProps> = (_props) => {
   function popSelector() {
     if(popUp) {
       return (  
-          <div className="fade">       
+          <div className={fadeOut ? "fadeOut":"fadeIn"}>       
           <PopUp target={target}
           changeVideo={changeVideo} playing={playing}
           ready={loaded} current={currentVideo} 
